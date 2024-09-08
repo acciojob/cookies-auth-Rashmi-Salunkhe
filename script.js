@@ -1,4 +1,6 @@
-//your JS code here. If required.
+// Mock user credentials for authentication
+const validUser = { username: "user", password: "password123" };
+
 // Function to set a cookie with expiration time (1 day)
 function setCookie(name, value, days) {
   const date = new Date();
@@ -52,6 +54,13 @@ function displayLoginSection() {
   document.getElementById("welcome-section").style.display = "none";
 }
 
+// Function to display error message
+function displayErrorMessage(message) {
+  const errorMessage = document.getElementById("error-message");
+  errorMessage.textContent = message;
+  errorMessage.style.display = "block";
+}
+
 // Check if the user is already logged in
 window.onload = function () {
   const savedUsername = getCookie("username");
@@ -66,7 +75,15 @@ window.onload = function () {
 document.getElementById("login-form").addEventListener("submit", function (event) {
   event.preventDefault();
   const username = document.getElementById("username").value;
-  loginUser(username);
+  const password = document.getElementById("password").value;
+
+  // Check if the provided credentials match the valid credentials
+  if (username === validUser.username && password === validUser.password) {
+    loginUser(username);
+    document.getElementById("error-message").style.display = "none";
+  } else {
+    displayErrorMessage("Invalid username or password. Please try again.");
+  }
 });
 
 // Add event listener for logout button
