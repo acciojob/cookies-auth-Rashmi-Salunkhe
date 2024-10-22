@@ -1,92 +1,53 @@
-// Mock user credentials for authentication
-const validUser = { username: "user", password: "password123" };
-
-// Function to set a cookie with expiration time (1 day)
-function setCookie(name, value, days) {
-  const date = new Date();
-  date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000); // Days to milliseconds
-  const expires = "expires=" + date.toUTCString();
-  document.cookie = name + "=" + value + ";" + expires + ";path=/";
-}
-
-// Function to get a cookie by name
-function getCookie(name) {
-  const nameEQ = name + "=";
-  const decodedCookie = decodeURIComponent(document.cookie);
-  const cookies = decodedCookie.split(";");
-
-  for (let i = 0; i < cookies.length; i++) {
-    let cookie = cookies[i].trim();
-    if (cookie.indexOf(nameEQ) == 0) {
-      return cookie.substring(nameEQ.length, cookie.length);
-    }
-  }
-  return null;
-}
-
-// Function to delete a cookie
-function deleteCookie(name) {
-  setCookie(name, "", -1); // Set expiry date in the past
-}
-
-// Function to handle login
-function loginUser(username) {
-  setCookie("username", username, 1); // Store username in a cookie for 1 day
-  displayWelcomeSection(username);
-}
-
-// Function to handle logout
-function logoutUser() {
-  deleteCookie("username");
-  displayLoginSection();
-}
-
-// Function to display welcome section
-function displayWelcomeSection(username) {
-  document.getElementById("login-section").style.display = "none";
-  document.getElementById("welcome-section").style.display = "block";
-  document.getElementById("user-name").textContent = username;
-}
-
-// Function to display login section
-function displayLoginSection() {
-  document.getElementById("login-section").style.display = "block";
-  document.getElementById("welcome-section").style.display = "none";
-}
-
-// Function to display error message
-function displayErrorMessage(message) {
-  const errorMessage = document.getElementById("error-message");
-  errorMessage.textContent = message;
-  errorMessage.style.display = "block";
-}
-
-// Check if the user is already logged in
-window.onload = function () {
-  const savedUsername = getCookie("username");
-  if (savedUsername) {
-    displayWelcomeSection(savedUsername);
-  } else {
-    displayLoginSection();
-  }
+window.onload = function() {
+    checkLoginStatus();
 };
 
-// Add event listener for login form submission
-document.getElementById("login-form").addEventListener("submit", function (event) {
-  event.preventDefault();
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+function setCookie(name, value, days) {
+    const d = new Date();
+    d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = "expires=" + d.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
 
-  // Check if the provided credentials match the valid credentials
-  if (username === validUser.username && password === validUser.password) {
-    loginUser(username);
-    document.getElementById("error-message").style.display = "none";
-  } else {
-    displayErrorMessage("Invalid username or password. Please try again.");
-  }
-});
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(nameEQ) === 0) {
+            return c.substring(nameEQ.length, c.length);
+        }
+    }
+    return null;
+}
 
-// Add event listener for logout button
-document.getElementById("logout").addEventListener("click", function () {
-  logoutUser();
-});
+function checkLoginStatus() {
+    const username = getCookie("username");
+    if (username) {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('logout').style.display = 'block';
+    } else {
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('logout').style.display = 'none';
+    }
+}
+
+function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    if (username === 'user' && password === 'password') {
+        setCookie("username", username, 7); // Store username in cookie for 7 days
+        checkLoginStatus();
+    } else {
+        alert("Invalid username or password");
+    }
+}
+
+function logout() {
+    setCookie("username", "", -1); // Delete the cookie
+    checkLoginStatus();
+}
