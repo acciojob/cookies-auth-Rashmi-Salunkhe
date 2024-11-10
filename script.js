@@ -13,10 +13,7 @@ function getCookie(name) {
     const nameEQ = name + "=";
     const ca = document.cookie.split(';');
     for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') {
-            c = c.substring(1);
-        }
+        let c = ca[i].trim();
         if (c.indexOf(nameEQ) === 0) {
             return c.substring(nameEQ.length, c.length);
         }
@@ -29,6 +26,7 @@ function checkLoginStatus() {
     if (username) {
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('logout').style.display = 'block';
+        alert(`Welcome back, ${username}!`);
     } else {
         document.getElementById('loginForm').style.display = 'block';
         document.getElementById('logout').style.display = 'none';
@@ -36,11 +34,12 @@ function checkLoginStatus() {
 }
 
 function login() {
-    const username = document.getElementById('username').value;
+    const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
 
     if (username === 'user' && password === 'password') {
         setCookie("username", username, 7); // Store username in cookie for 7 days
+        alert("Login successful");
         checkLoginStatus();
     } else {
         alert("Invalid username or password");
@@ -48,6 +47,7 @@ function login() {
 }
 
 function logout() {
-    setCookie("username", "", -1); // Delete the cookie
+    setCookie("username", "", -1); // Delete the cookie by setting expiration in the past
+    alert("You have been logged out");
     checkLoginStatus();
 }
