@@ -26,7 +26,6 @@ function checkLoginStatus() {
     if (username) {
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('logout').style.display = 'block';
-        alert(`Welcome back, ${username}!`);
     } else {
         document.getElementById('loginForm').style.display = 'block';
         document.getElementById('logout').style.display = 'none';
@@ -48,6 +47,7 @@ function login() {
 
 function logout() {
     setCookie("username", "", -1); // Delete the cookie by setting expiration in the past
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('logout').style.display = 'none';
     alert("You have been logged out");
-    checkLoginStatus();
 }
