@@ -38,8 +38,7 @@ function login() {
 
     if (username === 'user' && password === 'password') {
         setCookie("username", username, 7); // Store username in cookie for 7 days
-        alert("Login successful");
-        checkLoginStatus();
+        checkLoginStatus(); // Update the UI
     } else {
         alert("Invalid username or password");
     }
@@ -47,7 +46,5 @@ function login() {
 
 function logout() {
     setCookie("username", "", -1); // Delete the cookie by setting expiration in the past
-    document.getElementById('loginForm').style.display = 'block';
-    document.getElementById('logout').style.display = 'none';
-    alert("You have been logged out");
+    checkLoginStatus(); // Ensure UI is updated immediately
 }
